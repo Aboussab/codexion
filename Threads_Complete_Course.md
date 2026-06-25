@@ -89,7 +89,7 @@ PROCESS = Factory
 
 ```
 One Process
-├── One heap memory space
+z├── One heap memory space
 ├── One code section
 ├── One file descriptor table
 └── Multiple Threads
