@@ -20,14 +20,12 @@ int ft_check_arg(char**argv, int argc)
     int i;
     if (argc != 9)
         return 0;
-    if(atoi(argv[1]) <= 0)
-        return 0;
-    i = 2;
+    i = 1;
     while (i <= 7)
     {
         if(!ft_isdigit(argv[i]))
             return 0;
-        if (atoi(argv[i]) <= 0)
+        if (atoi(argv[i]) <= 0 && i != 7)
             return 0;
         i++;
     }
@@ -41,7 +39,7 @@ parse* ft_parse(int argc,char**argv)
 
     if(!ft_check_arg(argv,argc))
     {
-        printf("loooool your arg are false ");
+        fprintf(stderr, "Error: invalid arguments");
         return NULL;
     }
     arg = (parse*)malloc(sizeof(parse));
@@ -65,7 +63,6 @@ int main(int argc, char** argv)
     arg = ft_parse(argc, argv);
 
 
-    printf("%d", ft_isdigit(argv[1]));
 
     if(arg)
     { 
