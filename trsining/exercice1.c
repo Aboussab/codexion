@@ -4,36 +4,54 @@
 #include <pthread.h>
 
 long long counter = 0;
+typedef struct threa
+{
+    pthread_mutex_t mutex1;
+    pthread_t   thread;
+    int tid_num;
+}threa;
+
 
 void* hello_thread(void* i)
 {
-    printf("Hello, I am thread %d \n", *(int*)i+1);
-    for(int j = 0;j < 100000; j++)
-        counter++;
-    // usleep(1000000);
-    printf("Thread %d finished\n", *(int *)i+1);
-    return NULL;
+    printf("thread %i is working",(threa *)i->tid_num)
+    
 }
 
 
 int main()
 {
-    pthread_t    thread1[5];
-    int i1[5];
-    int i=0;
+    threa *tit1;
+    threa *tit2;
+    threa *tit3;
 
-    while (i < 5)
+    tit1 = (threa*) malloc(sizeof(threa));
+    if (!tit1)
     {
-        i1[i] = i;
-        pthread_create(&thread1[i],NULL,hello_thread, &i1[i]);
-        i++;
+        return 0;
+    }
+    tit2 = (threa*) malloc(sizeof(threa));
+    if (!tit2)
+    {
+        free(tit1);
+        return 0;
+    }
+    tit3 = (threa*) malloc(sizeof(threa));
+    if (!tit3)
+    {
+        free(tit1);
+        free(tit2);
+        return 0;
     }
 
-    for(int j = 0; j < 5; j++)
-    {
-        pthread_join(thread1[j],NULL);
+    pthread_create(&(tit1->thread),NULL,hello_thread,tit1);
+    pthread_create(&(tit2->thread),NULL,hello_thread,tit2);
+    pthread_create(&(tit3->thread),NULL,hello_thread,tit3);
 
-    }
+    pthread_join(tit1->thread, NULL);
+    pthread_join(tit2->thread, NULL);
+    pthread_join(tit3->thread, NULL);
+    
     printf("%lld \n", counter);
     return 0;
 }
