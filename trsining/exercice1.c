@@ -13,7 +13,9 @@ void* WORKER_SAY(void* i)
     pthread_mutex_lock(&mutex);
     while (counter == 0)
     {
-        pthread_cond_timedwait()
+        pthread_mutex_lock(&mutex);
+        counter++;
+        pthread_cond_timedwait();
     }
     
    
