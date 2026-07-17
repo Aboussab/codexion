@@ -53,7 +53,8 @@ typedef struct simulation
     dongle*             all_dongels;
     parse*              parsed;
     pthread_mutex_t     flag_mutex;
-    int                 stop_flag;
-    long long           clock;
+    int                 stop_flag;              // this flags is for the stop flags either all coders finsish or one of theme burne out 
+    long long           start_time;                  // this one is for giving the time  to log 
     pthread_mutex_t     log_mutex;
+    pthread_t           monitor;
 }simulation;
