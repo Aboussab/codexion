@@ -56,7 +56,4 @@ typedef struct simulation
     int                 stop_flag;
     long long           clock;
     pthread_mutex_t     log_mutex;
-
-    
-    
 }simulation;
