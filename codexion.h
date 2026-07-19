@@ -25,7 +25,7 @@ typedef struct parsing
 typedef struct coders
 {
     int                 id;
-    int                 i_compiling;
+    int                 counter_compiling;
     long long           last_compile_time;
     dongle*             left_dongle;
     dongle*             right_dongle;
