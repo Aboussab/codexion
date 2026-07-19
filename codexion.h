@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <limits.h>
+#include <sys/time.h>
 
 
 typedef struct dongles dongle;
@@ -58,3 +59,7 @@ typedef struct simulation
     pthread_mutex_t     log_mutex;
     pthread_t           monitor;
 }simulation;
+
+parse* ft_parse(int argc,char**argv);
+void    error_join(char* err);
+void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);
