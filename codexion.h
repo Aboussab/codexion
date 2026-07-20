@@ -51,7 +51,7 @@ typedef struct dongles
 typedef struct simulation
 {
     coder*              all_coders;
-    dongle*             all_dongels;
+    dongle*             all_dongles;
     parse*              parsed;
     pthread_mutex_t     flag_mutex;
     int                 stop_flag;              // this flags is for the stop flags either all coders finsish or one of theme burne out 
@@ -62,4 +62,4 @@ typedef struct simulation
 
 parse* ft_parse(int argc,char**argv);
 void    error_join(char* err);
-void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);
+// void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);
