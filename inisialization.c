@@ -13,7 +13,7 @@ void    creation_de_object(simulation* simulater, coder* coders_array, dongle* d
         return (free(simulater), free(coders_array), error_join("the creation of dongle_array failed."), 0);
 }
 
-void inisialize_simulater(simulation * simulater, parse *arg, coder* coders_array, dongle* dongle_array)
+void    inisialize_simulater(simulation * simulater, parse *arg, coder* coders_array, dongle* dongle_array, pthread_mutex_t flag_mutex, pthread_mutex_t log_mutex, pthread_t monitor)
 {
     struct timeval tv;
 
@@ -21,9 +21,9 @@ void inisialize_simulater(simulation * simulater, parse *arg, coder* coders_arra
     simulater->all_coders = coders_array;
     simulater->all_dongels = dongle_array;
     simulater->parsed = arg;
-    simulater->flag_mutex = ;
+    simulater->flag_mutex = flag_mutex;
     simulater->stop_flag = 0;
     simulater->start_time = tv.tv_sec * 1000L + tv.tv_usec / 1000;
-    simulater->log_mutex ;
-    simulater->monitor       ;
+    simulater->log_mutex = log_mutex;
+    simulater->monitor = monitor;
 }

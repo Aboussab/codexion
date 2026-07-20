@@ -2,8 +2,10 @@
 
 int main(int argc, char** argv)
 {
+    pthread_t       monitor;
     parse*          arg;
     pthread_mutex_t flag_mutex;
+    pthread_mutex_t log_mutex;
     simulation*     simulater;
     coder*         coders_array;
     dongle*         dongle_array;
