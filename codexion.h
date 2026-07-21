@@ -41,6 +41,7 @@ typedef struct t_waiting_slot
 
 typedef struct dongles
 {
+    int                 id;
     int                 available;
     long long           release_time;
     pthread_mutex_t     dongle_mutex;

@@ -35,6 +35,8 @@ simulation*    inisialize_simulater(parse* arg)
         simulater->start_time = tv.tv_sec * 1000L + tv.tv_usec / 1000;
         pthread_mutex_init(&simulater->log_mutex, NULL);
         simulater->monitor = 0;
+        creat_coders(simulater);
+        creat_dongels(simulater);
         return (simulater);
     }
     return(NULL);
@@ -68,11 +70,12 @@ void creat_coders(simulation* simulater)
     while (i <= simulater->parsed->number_of_coders)
     {
         simulater->all_dongles[i-1].available = 1;
+        simulater->all_dongles[i-1].id = i;
         simulater->all_dongles[i-1].release_time = 0;
         if (pthread_mutex_init(&(simulater->all_dongles[i-1].dongle_mutex), NULL) != 0)
-            return(error_join("creation dongel mutex faild"), 0);
+            return(error_join("creation dongel mutex faild"));
         if (pthread_cond_init(&(simulater->all_dongles[i-1].dongle_cond), NULL) != 0)
-            return(error_join("creation condetions var faild"), 0);
+            return(error_join("creation condetions var faild"));
         simulater->all_dongles[i-1].waiting_queue[0].waiting_coder = NULL;
         simulater->all_dongles[i-1].waiting_queue[0].coder_timestamps = 0;
         simulater->all_dongles[i-1].waiting_queue[1].waiting_coder = NULL;
