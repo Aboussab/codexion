@@ -1,5 +1,5 @@
 #include "codexion.h"
-
+//ALLOCATION D'ESPACE POUR LE  simulation STRUCT 
 simulation*    creation_de_object(parse* arg)
 {
     simulation* simulater;
@@ -20,15 +20,63 @@ simulation*    creation_de_object(parse* arg)
     simulater->parsed = arg;
     return (simulater);
 }
-
-void    inisialize_simulater(simulation * simulater, pthread_mutex_t flag_mutex, pthread_mutex_t log_mutex, pthread_t monitor)
+//
+simulation*    inisialize_simulater(parse* arg)
 {
     struct timeval tv;
+    simulation* simulater;
 
-    gettimeofday(&tv, NULL);
-    simulater->flag_mutex = flag_mutex;
-    simulater->stop_flag = 0;
-    simulater->start_time = tv.tv_sec * 1000L + tv.tv_usec / 1000;
-    simulater->log_mutex = log_mutex;
-    simulater->monitor = monitor;
+    simulater = creation_de_object(arg);
+    if (simulater)
+    {
+        gettimeofday(&tv, NULL);
+        pthread_mutex_init(&simulater->flag_mutex, NULL);
+        simulater->stop_flag = 0;
+        simulater->start_time = tv.tv_sec * 1000L + tv.tv_usec / 1000;
+        pthread_mutex_init(&simulater->log_mutex, NULL);
+        simulater->monitor = 0;
+        return (simulater);
+    }
+    return(NULL);
+}
+// here we have a fct that take a simululater and inisalize the coder array ;
+
+void creat_coders(simulation* simulater)
+{
+    int     i;
+    int     n;
+
+    n = simulater->parsed->number_of_coders;
+    i = 1;
+    while (i <= n)
+    {
+        simulater->all_coders[i-1].id = i;
+        simulater->all_coders[i-1].counter_compiling = 0;
+        simulater->all_coders[i-1].last_compile_time = simulater->start_time;
+        simulater->all_coders[i-1].manager = simulater;
+        simulater->all_coders[i-1].left_dongle = &(simulater->all_dongles[(i + 1) % n]);
+        simulater->all_coders[i-1].right_dongle = &(simulater->all_dongles[i % n]);
+        i++;
+    }
+    
+}
+ void   creat_dongels(simulation* simulater)
+ {
+    int     i;
+
+    i = 1;
+    while (i <= simulater->parsed->number_of_coders)
+    {
+        simulater->all_dongles[i-1].available = 1;
+        simulater->all_dongles[i-1].release_time = 0;
+        if (pthread_mutex_init(&(simulater->all_dongles[i-1].dongle_mutex), NULL) != 0)
+            return(error_join("creation dongel mutex faild"), 0);
+        if (pthread_cond_init(&(simulater->all_dongles[i-1].dongle_cond), NULL) != 0)
+            return(error_join("creation condetions var faild"), 0);
+        simulater->all_dongles[i-1].waiting_queue[0].waiting_coder = NULL;
+        simulater->all_dongles[i-1].waiting_queue[0].coder_timestamps = 0;
+        simulater->all_dongles[i-1].waiting_queue[1].waiting_coder = NULL;
+        simulater->all_dongles[i-1].waiting_queue[1].coder_timestamps = 0;
+        i++;
+    }
 }

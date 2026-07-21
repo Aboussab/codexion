@@ -61,5 +61,9 @@ typedef struct simulation
 }simulation;
 
 parse* ft_parse(int argc,char**argv);
+simulation*    creation_de_object(parse* arg);
+simulation*    inisialize_simulater(parse* arg);
+void creat_coders(simulation* simulater);
+void   creat_dongels(simulation* simulater);
 void    error_join(char* err);
 // void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);
