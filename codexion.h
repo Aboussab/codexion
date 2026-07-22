@@ -67,4 +67,5 @@ simulation*    inisialize_simulater(parse* arg);
 void creat_coders(simulation* simulater);
 void   creat_dongels(simulation* simulater);
 void    error_join(char* err);
+long    get_current_time();
 // void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);

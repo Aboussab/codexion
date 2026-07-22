@@ -1,4 +1,12 @@
 #include "codexion.h"
+
+long    get_current_time()
+{
+    struct timeval tv;
+
+    gettimeofday(&tv, NULL);
+    return (tv.tv_sec * 1000L + tv.tv_usec / 1000);
+}
 //ALLOCATION D'ESPACE POUR LE  simulation STRUCT 
 simulation*    creation_de_object(parse* arg)
 {
@@ -23,16 +31,14 @@ simulation*    creation_de_object(parse* arg)
 //
 simulation*    inisialize_simulater(parse* arg)
 {
-    struct timeval tv;
     simulation* simulater;
 
     simulater = creation_de_object(arg);
     if (simulater)
     {
-        gettimeofday(&tv, NULL);
         pthread_mutex_init(&simulater->flag_mutex, NULL);
         simulater->stop_flag = 0;
-        simulater->start_time = tv.tv_sec * 1000L + tv.tv_usec / 1000;
+        simulater->start_time = get_current_time();
         pthread_mutex_init(&simulater->log_mutex, NULL);
         simulater->monitor = 0;
         creat_coders(simulater);
@@ -49,15 +55,15 @@ void creat_coders(simulation* simulater)
     int     n;
 
     n = simulater->parsed->number_of_coders;
-    i = 1;
-    while (i <= n)
+    i = 0;
+    while (i < n)
     {
-        simulater->all_coders[i-1].id = i;
-        simulater->all_coders[i-1].counter_compiling = 0;
-        simulater->all_coders[i-1].last_compile_time = simulater->start_time;
-        simulater->all_coders[i-1].manager = simulater;
-        simulater->all_coders[i-1].left_dongle = &(simulater->all_dongles[(i + 1) % n]);
-        simulater->all_coders[i-1].right_dongle = &(simulater->all_dongles[i % n]);
+        simulater->all_coders[i].id = i + 1;
+        simulater->all_coders[i].counter_compiling = 0;
+        simulater->all_coders[i].last_compile_time = simulater->start_time;
+        simulater->all_coders[i].manager = simulater;
+        simulater->all_coders[i].left_dongle = &(simulater->all_dongles[i]);
+        simulater->all_coders[i].right_dongle = &(simulater->all_dongles[(i + 1) % n]);
         i++;
     }
     
