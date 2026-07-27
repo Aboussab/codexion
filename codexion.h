@@ -37,6 +37,10 @@ typedef struct t_waiting_slot
 {
     coder*              waiting_coder;
     long long           coder_timestamps;
+    // this is the key of the priority value for each scheduler methode if it was an:
+            // -FIFO we automaticly holds the time that threads requeste the dongle 
+            // -the EDF we hold the store the burnout deadline which is last_compile_time + time_to_burnout.
+        //and for both of theme we always take the smallest values between the tow coder.
 }t_slot;
 
 typedef struct dongles
@@ -46,7 +50,8 @@ typedef struct dongles
     long long           release_time;
     pthread_mutex_t     dongle_mutex;
     pthread_cond_t      dongle_cond;
-    t_slot               waiting_queue[2];
+    t_slot              waiting_queue[2];
+    int                 index;
 }dongle;
 
 typedef struct simulation
