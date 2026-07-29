@@ -51,7 +51,7 @@ typedef struct dongles
     pthread_mutex_t     dongle_mutex;
     pthread_cond_t      dongle_cond;
     t_slot              waiting_queue[2];
-    int                 index;
+    int                 size;
 }dongle;
 
 typedef struct simulation
@@ -72,5 +72,10 @@ simulation*    inisialize_simulater(parse* arg);
 void creat_coders(simulation* simulater);
 void   creat_dongels(simulation* simulater);
 void    error_join(char* err);
+void    push_queue(dongle* single_dongle, coder* requester, simulation *sim);
 long    get_current_time();
+coder*    pop_queue(dongle* single_dongle);
+void    log_fct(simulation* monitor, coder* coder_did, int n);
+dongle*    dongles_requeste(coder* requester, dongle* orderd, simulation* sim);
+void    put_dongel(dongle* orderd, simulation* sim);
 // void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);

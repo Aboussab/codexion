@@ -5,7 +5,7 @@ void    error_join(char* err)
     fprintf(stderr, "UNFortunately there is an error: %s", err);
 }
 int	ft_isdigit(char* c)
-{sim->parsed->scheduler
+{
     int i;
 
     i = 0;

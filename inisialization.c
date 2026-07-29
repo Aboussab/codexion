@@ -78,7 +78,7 @@ void creat_coders(simulation* simulater)
         simulater->all_dongles[i-1].available = 1;
         simulater->all_dongles[i-1].id = i;
         simulater->all_dongles[i-1].release_time = 0;
-        simulater->all_dongles[i-1].index = 0;
+        simulater->all_dongles[i-1].size = 0;
         if (pthread_mutex_init(&(simulater->all_dongles[i-1].dongle_mutex), NULL) != 0)
             return(error_join("creation dongel mutex faild"));
         if (pthread_cond_init(&(simulater->all_dongles[i-1].dongle_cond), NULL) != 0)

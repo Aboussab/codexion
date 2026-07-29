@@ -4,10 +4,10 @@
 void    push_queue(dongle* single_dongle, coder* requester, simulation *sim)
 {
     int                 index;
-    t_slot             tmp;
+    t_slot              tmp;
 
 
-    index = single_dongle->index;
+    index = single_dongle->size;
     single_dongle->waiting_queue[index].waiting_coder = requester;
     if (strcmp(sim->parsed->scheduler, "fifo") == 0)
         single_dongle->waiting_queue[index].coder_timestamps = get_current_time();
@@ -22,7 +22,7 @@ void    push_queue(dongle* single_dongle, coder* requester, simulation *sim)
             single_dongle->waiting_queue[index] = tmp;
         }
     }
-    single_dongle->index = index + 1;
+    single_dongle->size = index + 1;
 }
 
 coder*    pop_queue(dongle* single_dongle)
@@ -31,20 +31,20 @@ coder*    pop_queue(dongle* single_dongle)
     coder*              requester;
 
     index = 0;
-    if (single_dongle->index == 0)
+    if (single_dongle->size == 0)
         return (NULL);
     requester = single_dongle->waiting_queue[index].waiting_coder;
-    if (single_dongle->index == 2)
+    if (single_dongle->size == 2)
     {
         single_dongle->waiting_queue[0] = single_dongle->waiting_queue[1];
         single_dongle->waiting_queue[1].coder_timestamps = 0;
         single_dongle->waiting_queue[1].waiting_coder = NULL;
     }
-    else if (single_dongle->index == 1)
+    else if (single_dongle->size == 1)
     {
         single_dongle->waiting_queue[0].coder_timestamps = 0;
         single_dongle->waiting_queue[0].waiting_coder = NULL;
     }
-    single_dongle->index--;
+    single_dongle->size--;
     return (requester);
 }

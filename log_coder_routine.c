@@ -21,40 +21,50 @@ void    log_fct(simulation* monitor, coder* coder_did, int n)
     pthread_mutex_unlock(&monitor->log_mutex);
 }
 
-void    coder_routine(simulation* simulater, coder* user)
+void*    coder_routine(void* arg)
 {
-    while(!(simulater->stop_flag))
+    simulation*     simulater;
+    coder*          user;
+    user = (coder*)arg;
+    simulater = user->manager;
+    while (user->counter_compiling < simulater->parsed->number_of_compiles_required)
     {
-        if(user->left_dongle->available)
+        if (user->id % 2 == 0)
         {
-            user->left_dongle->available = 0;
-            pthread_mutex_lock(&(user->left_dongle->dongle_mutex));
-            log_fct(simulater, user, 1);
-            usleep(simulater->parsed->time_to_compile);
-            pthread_mutex_unlock(&(user->left_dongle->dongle_mutex));
-            user->left_dongle->available = 1;
+            dongles_requeste(user, user->right_dongle, simulater);
+            dongles_requeste(user, user->left_dongle, simulater);
         }
         else
         {
-            usleep(simulater->parsed->time_to_compile);
-            continue;
+            dongles_requeste(user, user->left_dongle, simulater);
+            dongles_requeste(user, user->right_dongle, simulater);
         }
-        if(user->left_dongle->available)
-        {
-            user->left_dongle->available = 0;
-            pthread_mutex_lock(&(user->right_dongle->dongle_mutex));
-            log_fct(simulater, user, 1);
-            usleep(simulater->parsed->time_to_compile);
-            pthread_mutex_unlock(&(user->right_dongle->dongle_mutex));
-            
-            usleep(simulater->parsed->time_to_debug);
-            usleep(simulater->parsed->time_to_compile);
-            user->left_dongle->available = 1; 
-        }
-        else
-        {
-            usleep(simulater->parsed->time_to_compile);
-            continue;
-        }
+        coder_is_compiling(simulater, user);
+        put_dongel(user->right_dongle, simulater);
+        put_dongel(user->left_dongle, simulater);
+        coder_debbuging(simulater, user);
+        coder_refactoring(simulater, user);
     }
+    return (NULL);
+}
+
+
+
+void    coder_is_compiling(coder* user,simulation* simulater)
+{
+    user->last_compile_time = get_current_time();
+    log_fct(simulater, user, 2);
+    usleep(simulater->parsed->time_to_compile);
+    user->counter_compiling++;
+}
+void    coder_debbuging(simulation* simulater, coder* user)
+{
+    log_fct(simulater, user, 3);
+    usleep(simulater->parsed->time_to_debug);
+    // u need to add some way to check every time if a coder burn out or the simulation should stop
+}
+void    coder_refactoring(simulation* simulater, coder* user)
+{
+    log_fct(simulater, user, 4);
+    usleep(simulater->parsed->time_to_refactor);
 }
