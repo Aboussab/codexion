@@ -20,38 +20,6 @@ void    log_fct(simulation* monitor, coder* coder_did, int n)
         printf("%lld %d burned out\n", timestamp, coder_did->id);
     pthread_mutex_unlock(&monitor->log_mutex);
 }
-
-void*    coder_routine(void* arg)
-{
-    simulation*     simulater;
-    coder*          user;
-    user = (coder*)arg;
-    simulater = user->manager;
-    while (user->counter_compiling < simulater->parsed->number_of_compiles_required)
-    {
-        if (user->id % 2 == 0)
-        {
-            dongles_requeste(user, user->right_dongle, simulater);
-            dongles_requeste(user, user->left_dongle, simulater);
-            if(check_stop_flag(simulater))
-                return (NULL);
-        }
-        else
-        {
-            dongles_requeste(user, user->left_dongle, simulater);
-            dongles_requeste(user, user->right_dongle, simulater);
-            if(check_stop_flag(simulater))
-                return (NULL);
-        }
-        coder_is_compiling(simulater, user);
-        put_dongel(user->right_dongle, simulater);
-        put_dongel(user->left_dongle, simulater);
-        coder_debbuging(simulater, user);
-        coder_refactoring(simulater, user);
-    }
-    return (NULL);
-}
-
 void    coder_is_compiling(coder* user,simulation* simulater)
 {
     if (check_stop_flag(simulater))
@@ -77,6 +45,36 @@ void    coder_refactoring(simulation* simulater, coder* user)
     usleep(simulater->parsed->time_to_refactor * 1000);
 }
 
+void*    coder_routine(void* arg)
+{
+    simulation*     simulater;
+    coder*          user;
+    user = (coder*)arg;
+    simulater = user->manager;
+    while (user->counter_compiling < simulater->parsed->number_of_compiles_required)
+    {
+        if (user->id % 2 == 0)
+        {
+            dongles_requeste(user, user->right_dongle, simulater);
+            dongles_requeste(user, user->left_dongle, simulater);
+            if(check_stop_flag(simulater))
+                return (NULL);
+        }
+        else
+        {
+            dongles_requeste(user, user->left_dongle, simulater);
+            dongles_requeste(user, user->right_dongle, simulater);
+            if(check_stop_flag(simulater))
+                return (NULL);
+        }
+        coder_is_compiling(user, simulater);
+        put_dongel(user->right_dongle, simulater);
+        put_dongel(user->left_dongle, simulater);
+        coder_debbuging(simulater, user);
+        coder_refactoring(simulater, user);
+    }
+    return (NULL);
+}
 void*    burn_out_detecteur(void* arg)
 {
     int                 i;

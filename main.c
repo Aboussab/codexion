@@ -1,6 +1,6 @@
 #include "codexion.h"
 
-void*   run(int argc, char** argv)
+int   start_simulation(int argc, char** argv)
 {
     parse*          arg;
     simulation*     simulater;
@@ -14,24 +14,27 @@ void*   run(int argc, char** argv)
         return(error_join("missing sumilation"),0);
     while (i < arg->number_of_coders)
     {
-        pthread_create(simulater->all_coders[i].coder_thread, NULL, coder_routine, &(simulater->all_coders[i]));
+        if ((pthread_create(&(simulater->all_coders[i].coder_thread), NULL, coder_routine, &(simulater->all_coders[i]))) != 0)
+            return (error_join("errore while creating coders."), 0);
+        i++;
     }
-    pthread_create(simulater->monitor, NULL, burn_out_detecteur, simulater);
+    if ((pthread_create(&(simulater->monitor), NULL, burn_out_detecteur, simulater)) != 0)
+            return (error_join("errore while creating simuleter thread."), 0);
     i = 0;
     while (i < arg->number_of_coders)
     {
-        pthread_join(simulater->all_coders[i].coder_thread, NULL);
+        if (pthread_join(simulater->all_coders[i].coder_thread, NULL) != 0)
+            return (error_join("errore while joining coders."), 0);
+        i++;
     }
-    pthread_join(simulater->monitor, NULL);
-
     
+    if (pthread_join(simulater->monitor, NULL) != 0)
+        return (error_join("errore while joining simulleter thread."), 0);
+    return (1);
 }
 
 int main(int argc, char** argv)
 {
-    parse*          arg;
-    simulation*     simulater;
-
-    run(argc, argv);
+    start_simulation(argc, argv);
     return 0;
 }
