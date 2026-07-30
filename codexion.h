@@ -30,6 +30,7 @@ typedef struct coders
     long long           last_compile_time;
     dongle*             left_dongle;
     dongle*             right_dongle;
+    pthread_t           coder_thread;
     simulation*         manager;
 }coder;
 
@@ -78,4 +79,7 @@ coder*    pop_queue(dongle* single_dongle);
 void    log_fct(simulation* monitor, coder* coder_did, int n);
 dongle*    dongles_requeste(coder* requester, dongle* orderd, simulation* sim);
 void    put_dongel(dongle* orderd, simulation* sim);
+int     check_stop_flag(simulation* simulater);
+void*    coder_routine(void* arg);
+void*    burn_out_detecteur(void* arg);
 // void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);
