@@ -27,7 +27,6 @@ void    coder_is_compiling(coder* user,simulation* simulater)
     user->last_compile_time = get_current_time();
     log_fct(simulater, user, 2);
     usleep(simulater->parsed->time_to_compile * 1000);
-    user->counter_compiling++;
 }
 void    coder_debbuging(simulation* simulater, coder* user)
 {
@@ -68,6 +67,7 @@ void*    coder_routine(void* arg)
                 return (NULL);
         }
         coder_is_compiling(user, simulater);
+        user->counter_compiling++;
         put_dongel(user->right_dongle, simulater);
         put_dongel(user->left_dongle, simulater);
         coder_debbuging(simulater, user);
@@ -86,6 +86,8 @@ void*    burn_out_detecteur(void* arg)
     j = 0;
     while(1)
     {
+        // if (simulater->all_coders[i].counter_compiling >= simulater->parsed->number_of_compiles_required)
+        //     continue;
         if ((get_current_time() - simulater->all_coders[i].last_compile_time) >= simulater->parsed->time_to_burnout)
         {
             log_fct(simulater, &simulater->all_coders[i], 5);
@@ -101,12 +103,11 @@ void*    burn_out_detecteur(void* arg)
         }
         i = (i+1) % (simulater->parsed->number_of_coders);
         usleep(1000);
-        }
+    }
     return (NULL);
 }
 int     check_stop_flag(simulation* simulater)
 {
-    pthread_mutex_lock(&simulater->flag_mutex);
     if(simulater->stop_flag == 1)
         return (pthread_mutex_unlock(&simulater->flag_mutex), 1);
     pthread_mutex_unlock(&simulater->flag_mutex);
