@@ -27,9 +27,9 @@ int   start_simulation(int argc, char** argv)
             return (error_join("errore while joining coders."), 0);
         i++;
     }
-    
     if (pthread_join(simulater->monitor, NULL) != 0)
         return (error_join("errore while joining simulleter thread."), 0);
+    ft_distroy(simulater);
     return (1);
 }
 

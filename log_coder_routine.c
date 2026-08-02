@@ -34,7 +34,6 @@ void    coder_debbuging(simulation* simulater, coder* user)
         return ;
     log_fct(simulater, user, 3);
     usleep(simulater->parsed->time_to_debug * 1000);
-    // u need to add some way to check every time if a coder burn out or the simulation should stop
 }
 void    coder_refactoring(simulation* simulater, coder* user)
 {
@@ -42,6 +41,23 @@ void    coder_refactoring(simulation* simulater, coder* user)
         return;
     log_fct(simulater, user, 4);
     usleep(simulater->parsed->time_to_refactor * 1000);
+}
+int check_coder(simulation* simulater)
+{
+    int     i;
+    int     counter;
+
+    i = 0;
+    counter = 0;
+    while (i < simulater->parsed->number_of_coders)
+    {
+        if (simulater->all_coders[i].counter_compiling >= simulater->parsed->number_of_compiles_required)
+            counter++;
+        if (counter == simulater->parsed->number_of_coders)
+            return (1);
+        i++;
+    }
+    return (0);
 }
 
 void*    coder_routine(void* arg)
@@ -86,8 +102,6 @@ void*    burn_out_detecteur(void* arg)
     j = 0;
     while(1)
     {
-        // if (simulater->all_coders[i].counter_compiling >= simulater->parsed->number_of_compiles_required)
-        //     continue;
         if ((get_current_time() - simulater->all_coders[i].last_compile_time) >= simulater->parsed->time_to_burnout)
         {
             log_fct(simulater, &simulater->all_coders[i], 5);
@@ -101,11 +115,26 @@ void*    burn_out_detecteur(void* arg)
             }
             return (NULL);
         }
+        if(check_coder(simulater))
+        {
+            pthread_mutex_lock(&simulater->flag_mutex);
+            simulater->stop_flag = 1;
+            pthread_mutex_unlock(&simulater->flag_mutex);
+            j = 0;
+            while (j < simulater->parsed->number_of_coders)
+            {
+                pthread_cond_broadcast(&simulater->all_dongles[j].dongle_cond);
+                j++;
+            }
+            return (NULL);
+        }
         i = (i+1) % (simulater->parsed->number_of_coders);
         usleep(1000);
     }
     return (NULL);
 }
+
+
 int     check_stop_flag(simulation* simulater)
 {
     if(simulater->stop_flag == 1)
