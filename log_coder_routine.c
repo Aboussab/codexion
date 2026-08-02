@@ -70,15 +70,19 @@ void*    coder_routine(void* arg)
     {
         if (user->id % 2 == 0)
         {
-            dongles_requeste(user, user->right_dongle, simulater);
-            dongles_requeste(user, user->left_dongle, simulater);
+            if(dongles_requeste(user, user->right_dongle, simulater) == NULL)
+                return (NULL);
+            if(dongles_requeste(user, user->left_dongle, simulater) == NULL)
+                return (NULL);
             if(check_stop_flag(simulater))
                 return (NULL);
         }
         else
         {
-            dongles_requeste(user, user->left_dongle, simulater);
-            dongles_requeste(user, user->right_dongle, simulater);
+            if(dongles_requeste(user, user->left_dongle, simulater) == NULL)
+                return (NULL);
+            if(dongles_requeste(user, user->right_dongle, simulater) == NULL)
+                return (NULL);
             if(check_stop_flag(simulater))
                 return (NULL);
         }
@@ -137,6 +141,7 @@ void*    burn_out_detecteur(void* arg)
 
 int     check_stop_flag(simulation* simulater)
 {
+    pthread_mutex_lock(&simulater->flag_mutex);
     if(simulater->stop_flag == 1)
         return (pthread_mutex_unlock(&simulater->flag_mutex), 1);
     pthread_mutex_unlock(&simulater->flag_mutex);

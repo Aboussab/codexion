@@ -12,8 +12,11 @@ void    ft_distroy(simulation*  simulater)
         pthread_cond_destroy(&(simulater->all_dongles[i].dongle_cond));
         i++;
     }
+    pthread_mutex_destroy(&(simulater->flag_mutex));
+    pthread_mutex_destroy(&(simulater->log_mutex));
     free(simulater->all_dongles);
     free(simulater->all_coders);
+    free(simulater->parsed);
     free(simulater);
 }
 
