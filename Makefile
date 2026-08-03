@@ -1,7 +1,7 @@
 NAME = codexion
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
-SRCS = codexion.h clean_up.c dongles.c log_coder_routine.c\
+SRCS = clean_up.c dongles.c log_coder_routine.c\
 	inisialization.c main.c parsing_and_error.c \
 	push_bubble_pop.c \
 
