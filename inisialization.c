@@ -63,6 +63,7 @@ void creat_coders(simulation* simulater)
         simulater->all_coders[i].last_compile_time = simulater->start_time;
         simulater->all_coders[i].manager = simulater;
         simulater->all_coders[i].left_dongle = &(simulater->all_dongles[i]);
+        pthread_mutex_init(&simulater->all_coders[i].coder_mutex, NULL);
         simulater->all_coders[i].right_dongle = &(simulater->all_dongles[(i + 1) % n]);
         i++;
     }

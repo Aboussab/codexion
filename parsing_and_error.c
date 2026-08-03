@@ -28,7 +28,7 @@ int ft_check_arg(char**argv, int argc)
     {
         if(!ft_isdigit(argv[i]))
             return (error_join("arguments most be an valid positive int"), 0);
-        if (atoi(argv[i]) <= 0 && i != 7)
+        if (atoi(argv[i]) <= 0 && (i == 1))
             return (error_join("arguments most be an valid positive int"), 0);
         i++;
     }

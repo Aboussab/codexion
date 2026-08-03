@@ -30,6 +30,7 @@ typedef struct coders
     long long           last_compile_time;
     dongle*             left_dongle;
     dongle*             right_dongle;
+    pthread_mutex_t     coder_mutex;
     pthread_t           coder_thread;
     simulation*         manager;
 }coder;

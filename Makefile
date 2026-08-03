@@ -1,5 +1,5 @@
 NAME = codexion
-CFLAGS = -Wall -Werror -Wextra -pthread
+CFLAGS = -Wall -Werror -fsanitize=thread -Wextra -pthread
 CC = cc
 SRC = dongles.c inisialization.c log_coder_routine.c \
 	main.c parsing_and_error.c push_bubble_pop.c \
