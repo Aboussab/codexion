@@ -2,7 +2,7 @@
 
 void    error_join(char* err)
 {
-    fprintf(stderr, "UNFortunately there is an error: %s", err);
+    fprintf(stderr, "UNFortunately there is an error: %s\n", err);
 }
 int	ft_isdigit(char* c)
 {

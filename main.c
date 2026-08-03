@@ -9,6 +9,8 @@ int   start_simulation(int argc, char** argv)
     i = 0;
 
     arg = ft_parse(argc, argv);
+    if (!arg)
+        return (0);
     simulater = inisialize_simulater(arg);
     if(!simulater)
         return(error_join("missing sumilation"),0);

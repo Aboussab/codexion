@@ -1,11 +1,11 @@
 NAME = codexion
+CFLAGS = -Wall -Werror -Wextra -pthread
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread
-SRCS = clean_up.c dongles.c log_coder_routine.c\
-	inisialization.c main.c parsing_and_error.c \
-	push_bubble_pop.c \
+SRC = dongles.c inisialization.c log_coder_routine.c \
+	main.c parsing_and_error.c push_bubble_pop.c \
+	clean_up.c \
 
-OBJS = $(SRCS:.c=.o)
+OBJS = $(SRC:.c=.o)
 H_FILE = $(NAME).h
 
 all : $(NAME)
@@ -16,23 +16,12 @@ all : $(NAME)
 $(NAME) : $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
-clean :
+clean : 
 	$(RM) $(OBJS)
 
 fclean : clean
 	$(RM) $(NAME)
 
-re : fclean all
+re : fclean all 
 
-debug : CFLAGS += -g
-debug : fclean $(NAME)
-
-address_sanitize : CFLAGS += -fsanitize=address -g
-address_sanitize : fclean $(NAME)
-
-thread_sanitize : CFLAGS += -fsanitize=thread -g
-thread_sanitize : fclean $(NAME)
-
-
-.PHONY : clean fclean all re debug
-.SECONDARY : $(OBJS)
+.PHONY: all fclean clean re 

@@ -19,5 +19,3 @@ void    ft_distroy(simulation*  simulater)
     free(simulater->parsed);
     free(simulater);
 }
-
-// /./codexion 15 120 60 60 60 5 60 fifo 
