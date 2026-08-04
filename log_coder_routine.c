@@ -58,7 +58,7 @@ int check_coder(simulation* simulater)
         if (simulater->all_coders[i].counter_compiling >= simulater->parsed->number_of_compiles_required)
             counter++;
         if (counter == simulater->parsed->number_of_coders)
-            return (1);
+            return (pthread_mutex_unlock(&simulater->all_coders[i].coder_mutex), 1);
         pthread_mutex_unlock(&simulater->all_coders[i].coder_mutex);
         i++;
     }
@@ -77,7 +77,6 @@ void*    coder_routine(void* arg)
         {
             if(dongles_requeste(user, user->right_dongle, simulater) == NULL)
                 return (NULL);
-         
             if(dongles_requeste(user, user->left_dongle, simulater) == NULL)
                 return (NULL);
             if(check_stop_flag(simulater))
