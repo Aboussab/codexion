@@ -75,7 +75,6 @@ void*    coder_routine(void* arg)
     {
         if (user->id % 2 == 0)
         {
-            // usleep(100);
             if(dongles_requeste(user, user->right_dongle, simulater) == NULL)
                 return (NULL);
          
@@ -94,13 +93,19 @@ void*    coder_routine(void* arg)
                 return (NULL);
         }
         coder_is_compiling(user, simulater);
+        if (check_stop_flag(simulater))
+            return (NULL);
         pthread_mutex_lock(&user->coder_mutex);
         user->counter_compiling++;
         pthread_mutex_unlock(&user->coder_mutex);
         put_dongel(user->right_dongle, simulater);
         put_dongel(user->left_dongle, simulater);
         coder_debbuging(simulater, user);
+        if (check_stop_flag(simulater))
+            return (NULL);
         coder_refactoring(simulater, user);
+        if (check_stop_flag(simulater))
+            return (NULL);
     }
     return (NULL);
 }

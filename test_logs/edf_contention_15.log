@@ -9,9 +9,9 @@
 202 4 is debugging
 401 1 is refactoring
 402 4 is refactoring
+1001 1 has taken a dongle
 1001 2 has taken a dongle
 1001 2 is compiling
-1001 1 has taken a dongle
 1002 5 has taken a dongle
 1201 2 is debugging
 1401 2 is refactoring
@@ -29,4 +29,4 @@
 3001 2 has taken a dongle
 3001 2 has taken a dongle
 3001 2 is compiling
-3004 4 burned out
+3006 4 burned out

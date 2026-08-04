@@ -5,18 +5,17 @@ dongle*    dongles_requeste(coder* requester, dongle* orderd, simulation* sim)
 {
     struct timespec tsp;
 
-    // release_time for a dongele is the time when it was puted by a coder + time to cooldown
     pthread_mutex_lock(&orderd->dongle_mutex);
-    pthread_mutex_lock(&sim->flag_mutex);
     push_queue(orderd, requester, sim);
-    while (!sim->stop_flag && (orderd->waiting_queue[0].waiting_coder != requester || orderd->release_time > get_current_time() || orderd->available == 0))
+    while ((!check_stop_flag(sim)) && (orderd->waiting_queue[0].waiting_coder != requester || orderd->release_time > get_current_time() || orderd->available == 0))
     {
         tsp.tv_sec = orderd->release_time / 1000;
         tsp.tv_nsec = (orderd->release_time % 1000) * 1000000L;
         pthread_cond_timedwait(&orderd->dongle_cond, &orderd->dongle_mutex, &tsp);
     }
+    pthread_mutex_lock(&sim->flag_mutex);
     if (sim->stop_flag)
-        return(pthread_mutex_lock(&sim->flag_mutex), pthread_mutex_unlock(&orderd->dongle_mutex), NULL);
+        return(pthread_mutex_unlock(&orderd->dongle_mutex), pthread_mutex_unlock(&sim->flag_mutex),NULL);
     else
     {
         orderd->available = 0;

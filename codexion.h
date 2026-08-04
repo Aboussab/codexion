@@ -86,5 +86,6 @@ void*    coder_routine(void* arg);
 void    coder_refactoring(simulation* simulater, coder* user);
 void    coder_debbuging(simulation* simulater, coder* user);
 void    coder_is_compiling(coder* user,simulation* simulater);
+int     check_stop_flag(simulation* simulater);
 void*    burn_out_detecteur(void* arg);
 // void    creation_de_object(simulation* simulater, coder* coders_array, dongle* dongle_array, parse* arg);
