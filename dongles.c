@@ -7,6 +7,7 @@ dongle*    dongles_requeste(coder* requester, dongle* orderd, simulation* sim)
 
     // release_time for a dongele is the time when it was puted by a coder + time to cooldown
     pthread_mutex_lock(&orderd->dongle_mutex);
+    pthread_mutex_lock(&sim->flag_mutex);
     push_queue(orderd, requester, sim);
     while (!sim->stop_flag && (orderd->waiting_queue[0].waiting_coder != requester || orderd->release_time > get_current_time() || orderd->available == 0))
     {
@@ -15,12 +16,13 @@ dongle*    dongles_requeste(coder* requester, dongle* orderd, simulation* sim)
         pthread_cond_timedwait(&orderd->dongle_cond, &orderd->dongle_mutex, &tsp);
     }
     if (sim->stop_flag)
-        return(pthread_mutex_unlock(&orderd->dongle_mutex), NULL);
+        return(pthread_mutex_lock(&sim->flag_mutex), pthread_mutex_unlock(&orderd->dongle_mutex), NULL);
     else
     {
         orderd->available = 0;
         log_fct(sim, requester, 1);
         pop_queue(orderd);
+        pthread_mutex_unlock(&sim->flag_mutex);
         pthread_mutex_unlock(&orderd->dongle_mutex);
     }
     return (orderd);
