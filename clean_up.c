@@ -10,6 +10,7 @@ void    ft_distroy(simulation*  simulater)
     {
         pthread_mutex_destroy(&(simulater->all_dongles[i].dongle_mutex));
         pthread_cond_destroy(&(simulater->all_dongles[i].dongle_cond));
+        pthread_mutex_destroy(&((simulater->all_coders[i]).counter_compiling_mutex));
         i++;
     }
     pthread_mutex_destroy(&(simulater->flag_mutex));

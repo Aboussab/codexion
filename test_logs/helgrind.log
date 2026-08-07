@@ -1,5 +1,0 @@
-==3608255== Helgrind, a thread error detector
-==3608255== Copyright (C) 2007-2017, and GNU GPL'd, by OpenWorks LLP et al.
-==3608255== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==3608255== Command: ./codexion 5 2000 200 200 200 10 0 fifo
-==3608255== 

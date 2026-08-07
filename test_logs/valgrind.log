@@ -1,8 +1,0 @@
-==3607911== Memcheck, a memory error detector
-==3607911== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==3607911== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==3607911== Command: ./codexion 5 2000 200 200 200 10 0 fifo
-==3607911== 
-==3607911== Warning: set address range perms: large range [0x7b0000000000, 0x7c0000003000) (noaccess)
-==3607911== Warning: set address range perms: large range [0x8000000000, 0x10000000000) (noaccess)
-==3607911== Warning: set address range perms: large range [0x200000000000, 0x300000000000) (noaccess)

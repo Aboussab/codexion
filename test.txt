@@ -1,493 +1,494 @@
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  INVALID INPUT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ no arguments
-  ./codexion 
-    [FAIL] should have rejected (exit=0)
-
-▶ too few arguments
-  ./codexion 4 400 200
-    [FAIL] should have rejected (exit=0)
-
-▶ negative coders
-  ./codexion -1 400 200 100 100 2 0 fifo
-    [FAIL] should have rejected (exit=0)
-
-▶ negative burnout
-  ./codexion 4 -400 200 100 100 2 0 fifo
-    [FAIL] should have rejected (exit=0)
-
-▶ zero coders
-  ./codexion 0 400 200 100 100 2 0 fifo
-    [FAIL] should have rejected (exit=0)
-
-▶ invalid scheduler
-  ./codexion 4 400 200 100 100 2 0 random
-    [FAIL] should have rejected (exit=0)
-
-▶ scheduler missing
-  ./codexion 4 400 200 100 100 2 0
-    [FAIL] should have rejected (exit=0)
-
-▶ non-integer burnout
-  ./codexion 4 abc 200 100 100 2 0 fifo
-    [FAIL] should have rejected (exit=0)
-
-▶ float argument
-  ./codexion 4 400.5 200 100 100 2 0 fifo
-    [FAIL] should have rejected (exit=0)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  SINGLE CODER (always burns out)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 1 coder, burnout=400, FIFO
-  ./codexion 1 400 200 100 100 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 1 coder, burnout=800, FIFO
-  ./codexion 1 800 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 1 coder, burnout=800, EDF
-  ./codexion 1 800 100 50 50 2 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  SHOULD NOT BURN OUT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 2 coders, generous burnout, FIFO
-  ./codexion 2 800 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 2 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, generous burnout, EDF
-  ./codexion 2 800 100 50 50 2 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 2 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ 3 coders, generous burnout, FIFO
-  ./codexion 3 800 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 3 × 2 = 6 (got 6)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, generous burnout, FIFO
-  ./codexion 4 800 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 2 = 8 (got 8)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, generous burnout, EDF
-  ./codexion 4 800 100 50 50 2 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 2 = 8 (got 8)
-    [PASS] timestamps non-decreasing
-
-▶ 5 coders, generous burnout, FIFO
-  ./codexion 5 1000 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 5 × 2 = 10 (got 10)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, 1 compile only, FIFO
-  ./codexion 2 600 100 50 50 1 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 1 = 2 (got 2)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, 5 compiles, EDF
-  ./codexion 4 1500 100 50 50 5 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 5 = 20 (got 20)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, zero cooldown, EDF
-  ./codexion 2 800 100 50 50 3 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 3 = 6 (got 6)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, small cooldown, FIFO
-  ./codexion 4 1000 100 50 50 3 10 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 3 = 12 (got 12)
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  SHOULD BURN OUT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 2 coders, burnout < compile, FIFO
-  ./codexion 2 50 200 100 100 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, burnout = compile, FIFO
-  ./codexion 4 200 200 100 100 5 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, tight burnout + cooldown, FIFO
-  ./codexion 4 400 200 100 100 5 100 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, burnout shorter than cycle, EDF
-  ./codexion 4 300 200 100 100 5 50 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 3 coders, very short burnout, FIFO
-  ./codexion 3 50 200 100 100 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 5 coders, burnout tight, EDF
-  ./codexion 5 300 200 100 100 5 50 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  STRESS — many compiles
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 2 coders, 10 compiles, FIFO
-  ./codexion 2 2000 100 50 50 10 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 10 = 20 (got 20)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, 10 compiles, EDF
-  ./codexion 4 2000 100 50 50 10 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 10 = 40 (got 40)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, 10 compiles, EDF, with cooldown
-  ./codexion 2 3000 100 50 50 10 20 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 10 = 20 (got 20)
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  FIFO vs EDF same args
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 4 coders generous, FIFO
-  ./codexion 4 1000 100 50 50 3 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 3 = 12 (got 12)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders generous, EDF
-  ./codexion 4 1000 100 50 50 3 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 3 = 12 (got 12)
-    [PASS] timestamps non-decreasing
-
-▶ 3 coders tight, FIFO
-  ./codexion 3 350 200 50 50 5 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [FAIL] timestamps non-decreasing
-
-▶ 3 coders tight, EDF
-  ./codexion 3 350 200 50 50 5 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  DONGLE COOLDOWN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 2 coders, zero cooldown, FIFO
-  ./codexion 2 800 100 50 50 3 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 3 = 6 (got 6)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown=50, FIFO
-  ./codexion 2 1000 100 50 50 3 50 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 3 = 6 (got 6)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown=50, EDF
-  ./codexion 2 1000 100 50 50 3 50 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 3 = 6 (got 6)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown > compile, FIFO
-  ./codexion 2 1500 100 50 50 2 200 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 2 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown > compile, EDF
-  ./codexion 2 1500 100 50 50 2 200 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 2 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown causes burnout, FIFO
-  ./codexion 2 300 100 50 50 5 400 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown causes burnout, EDF
-  ./codexion 2 300 100 50 50 5 400 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, cooldown=100, generous burnout, FIFO
-  ./codexion 4 1500 100 50 50 2 100 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 2 = 8 (got 8)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, cooldown=100, tight burnout, FIFO
-  ./codexion 4 400 100 50 50 5 100 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, cooldown = burnout, FIFO
-  ./codexion 2 200 100 50 50 5 200 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  HARD CASES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ burnout = full cycle time, FIFO
-  ./codexion 2 300 100 100 100 3 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [FAIL] no burnout
-    [FAIL] compile count = 2 × 3 = 6 (got 3)
-    [PASS] timestamps non-decreasing
-
-▶ burnout = full cycle - 1ms, FIFO
-  ./codexion 2 299 100 100 100 3 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ burnout tight alternation 2 coders, FIFO
-  ./codexion 2 400 200 0 0 3 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [FAIL] compile count = 2 × 3 = 6 (got 0)
-    [PASS] timestamps non-decreasing
-
-▶ EDF prioritizes closest deadline, 4 coders
-  ./codexion 4 600 100 50 50 5 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 5 = 20 (got 20)
-    [FAIL] timestamps non-decreasing
-
-▶ FIFO same params as above, 4 coders
-  ./codexion 4 600 100 50 50 5 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 5 = 20 (got 20)
-    [PASS] timestamps non-decreasing
-
-▶ EDF deadline ordering matters, 4 coders
-  ./codexion 4 500 150 50 50 4 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 4 = 16 (got 16)
-    [PASS] timestamps non-decreasing
-
-▶ cooldown = compile, must survive, FIFO
-  ./codexion 2 600 100 50 50 2 100 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 2 × 2 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ cooldown = compile, burnout = compile + cooldown, FIFO
-  ./codexion 2 200 100 50 50 5 100 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] burnout detected
-    [PASS] burnout timestamp > 0
-    [PASS] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 5 coders, large cooldown, EDF
-  ./codexion 5 2000 100 50 50 3 150 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 5 × 3 = 15 (got 15)
-    [PASS] timestamps non-decreasing
-
-▶ EDF rescues starving coders, 4 coders
-  ./codexion 4 700 200 100 100 3 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 3 = 12 (got 12)
-    [PASS] timestamps non-decreasing
-
-▶ FIFO starvation risk, 4 coders, tight burnout
-  ./codexion 4 500 200 100 100 3 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [FAIL] burnout detected
-    [FAIL] burnout timestamp > 0
-    [FAIL] exactly 1 burned out line
-    [PASS] timestamps non-decreasing
-
-▶ 1 compile required, 4 coders, FIFO
-  ./codexion 4 800 100 50 50 1 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 1 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ 1 compile required, 4 coders, EDF
-  ./codexion 4 800 100 50 50 1 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 4 × 1 = 4 (got 4)
-    [PASS] timestamps non-decreasing
-
-▶ 7 coders, generous burnout, FIFO
-  ./codexion 7 1500 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 7 × 2 = 14 (got 14)
-    [PASS] timestamps non-decreasing
-
-▶ 7 coders, generous burnout, EDF
-  ./codexion 7 1500 100 50 50 2 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 7 × 2 = 14 (got 14)
-    [PASS] timestamps non-decreasing
-
-▶ 8 coders, generous burnout, FIFO
-  ./codexion 8 1500 100 50 50 2 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [PASS] compile count = 8 × 2 = 16 (got 16)
-    [PASS] timestamps non-decreasing
-
-▶ 2 coders, no debug/refactor, FIFO
-  ./codexion 2 800 100 0 0 5 0 fifo
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [FAIL] compile count = 2 × 5 = 10 (got 0)
-    [PASS] timestamps non-decreasing
-
-▶ 4 coders, no debug/refactor, EDF
-  ./codexion 4 800 100 0 0 5 0 edf
-    [PASS] program exits within 10s (no deadlock)
-    [PASS] no burnout
-    [FAIL] compile count = 4 × 5 = 20 (got 0)
-    [PASS] timestamps non-decreasing
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  REPEATABILITY (same args, 5 runs must agree)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-▶ 2 coders generous, no burnout, FIFO (x5)
-  ./codexion 2 800 100 50 50 2 0 fifo
-    [PASS] all 5 runs agree (burnout=no)
-
-▶ 4 coders generous, no burnout, EDF (x5)
-  ./codexion 4 800 100 50 50 2 0 edf
-    [PASS] all 5 runs agree (burnout=no)
-
-▶ 1 coder, always burns out, FIFO (x5)
-  ./codexion 1 400 200 100 100 2 0 fifo
-    [PASS] all 5 runs agree (burnout=yes)
-
-▶ 2 coders, burnout < compile, always burns out, FIFO (x5)
-  ./codexion 2 50 200 100 100 2 0 fifo
-    [PASS] all 5 runs agree (burnout=yes)
-
-▶ 4 coders, 5 compiles, no burnout, FIFO (x5)
-  ./codexion 4 1500 100 50 50 5 0 fifo
-    [PASS] all 5 runs agree (burnout=no)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Results: 229 passed / 19 failed / 248 total
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  19 TEST(S) FAILED ✗
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  INVALID INPUT[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ no arguments[0m
+  [0;34m./codexion [0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ too few arguments[0m
+  [0;34m./codexion 4 400 200[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ negative coders[0m
+  [0;34m./codexion -1 400 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ negative burnout[0m
+  [0;34m./codexion 4 -400 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ zero coders[0m
+  [0;34m./codexion 0 400 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ invalid scheduler[0m
+  [0;34m./codexion 4 400 200 100 100 2 0 random[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ scheduler missing[0m
+  [0;34m./codexion 4 400 200 100 100 2 0[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ non-integer burnout[0m
+  [0;34m./codexion 4 abc 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[1;33m▶ float argument[0m
+  [0;34m./codexion 4 400.5 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m should have rejected (exit=0)
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  SINGLE CODER (always burns out)[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 1 coder, burnout=400, FIFO[0m
+  [0;34m./codexion 1 400 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 1 coder, burnout=800, FIFO[0m
+  [0;34m./codexion 1 800 100 50 50 2 0 fifo[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 1 coder, burnout=800, EDF[0m
+  [0;34m./codexion 1 800 100 50 50 2 0 edf[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  SHOULD NOT BURN OUT[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 2 coders, generous burnout, FIFO[0m
+  [0;34m./codexion 2 800 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 2 = 4 (got 4)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, generous burnout, EDF[0m
+  [0;34m./codexion 2 800 100 50 50 2 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 2 = 4 (got 4)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 3 coders, generous burnout, FIFO[0m
+  [0;34m./codexion 3 800 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 3 × 2 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, generous burnout, FIFO[0m
+  [0;34m./codexion 4 800 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 2 = 8 (got 8)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, generous burnout, EDF[0m
+  [0;34m./codexion 4 800 100 50 50 2 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 2 = 8 (got 8)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 5 coders, generous burnout, FIFO[0m
+  [0;34m./codexion 5 1000 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 5 × 2 = 10 (got 10)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, 1 compile only, FIFO[0m
+  [0;34m./codexion 2 600 100 50 50 1 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 1 = 2 (got 2)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, 5 compiles, EDF[0m
+  [0;34m./codexion 4 1500 100 50 50 5 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 5 = 20 (got 20)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, zero cooldown, EDF[0m
+  [0;34m./codexion 2 800 100 50 50 3 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 3 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, small cooldown, FIFO[0m
+  [0;34m./codexion 4 1000 100 50 50 3 10 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 3 = 12 (got 12)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  SHOULD BURN OUT[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 2 coders, burnout < compile, FIFO[0m
+  [0;34m./codexion 2 50 200 100 100 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, burnout = compile, FIFO[0m
+  [0;34m./codexion 4 200 200 100 100 5 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, tight burnout + cooldown, FIFO[0m
+  [0;34m./codexion 4 400 200 100 100 5 100 fifo[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, burnout shorter than cycle, EDF[0m
+  [0;34m./codexion 4 300 200 100 100 5 50 edf[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 3 coders, very short burnout, FIFO[0m
+  [0;34m./codexion 3 50 200 100 100 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 5 coders, burnout tight, EDF[0m
+  [0;34m./codexion 5 300 200 100 100 5 50 edf[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  STRESS — many compiles[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 2 coders, 10 compiles, FIFO[0m
+  [0;34m./codexion 2 2000 100 50 50 10 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 10 = 20 (got 20)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, 10 compiles, EDF[0m
+  [0;34m./codexion 4 2000 100 50 50 10 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 10 = 40 (got 40)
+    [0;31m[FAIL][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, 10 compiles, EDF, with cooldown[0m
+  [0;34m./codexion 2 3000 100 50 50 10 20 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 10 = 20 (got 20)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  FIFO vs EDF same args[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 4 coders generous, FIFO[0m
+  [0;34m./codexion 4 1000 100 50 50 3 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 3 = 12 (got 12)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders generous, EDF[0m
+  [0;34m./codexion 4 1000 100 50 50 3 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 3 = 12 (got 12)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 3 coders tight, FIFO[0m
+  [0;34m./codexion 3 350 200 50 50 5 0 fifo[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 3 coders tight, EDF[0m
+  [0;34m./codexion 3 350 200 50 50 5 0 edf[0m
+    [0;31m[FAIL][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m burnout detected
+    [0;31m[FAIL][0m burnout timestamp > 0
+    [0;31m[FAIL][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  DONGLE COOLDOWN[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 2 coders, zero cooldown, FIFO[0m
+  [0;34m./codexion 2 800 100 50 50 3 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 3 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown=50, FIFO[0m
+  [0;34m./codexion 2 1000 100 50 50 3 50 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 3 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown=50, EDF[0m
+  [0;34m./codexion 2 1000 100 50 50 3 50 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 3 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown > compile, FIFO[0m
+  [0;34m./codexion 2 1500 100 50 50 2 200 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 2 = 4 (got 4)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown > compile, EDF[0m
+  [0;34m./codexion 2 1500 100 50 50 2 200 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 2 = 4 (got 4)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown causes burnout, FIFO[0m
+  [0;34m./codexion 2 300 100 50 50 5 400 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown causes burnout, EDF[0m
+  [0;34m./codexion 2 300 100 50 50 5 400 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, cooldown=100, generous burnout, FIFO[0m
+  [0;34m./codexion 4 1500 100 50 50 2 100 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 2 = 8 (got 8)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, cooldown=100, tight burnout, FIFO[0m
+  [0;34m./codexion 4 400 100 50 50 5 100 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, cooldown = burnout, FIFO[0m
+  [0;34m./codexion 2 200 100 50 50 5 200 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  HARD CASES[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ burnout = full cycle time, FIFO[0m
+  [0;34m./codexion 2 300 100 100 100 3 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 3 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ burnout = full cycle - 1ms, FIFO[0m
+  [0;34m./codexion 2 299 100 100 100 3 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ burnout tight alternation 2 coders, FIFO[0m
+  [0;34m./codexion 2 400 200 0 0 3 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 3 = 6 (got 6)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ EDF prioritizes closest deadline, 4 coders[0m
+  [0;34m./codexion 4 600 100 50 50 5 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 5 = 20 (got 20)
+    [0;31m[FAIL][0m timestamps non-decreasing
+
+[1;33m▶ FIFO same params as above, 4 coders[0m
+  [0;34m./codexion 4 600 100 50 50 5 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 5 = 20 (got 20)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ EDF deadline ordering matters, 4 coders[0m
+  [0;34m./codexion 4 500 150 50 50 4 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 4 = 16 (got 16)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ cooldown = compile, must survive, FIFO[0m
+  [0;34m./codexion 2 600 100 50 50 2 100 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 2 = 4 (got 4)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ cooldown = compile, burnout = compile + cooldown, FIFO[0m
+  [0;34m./codexion 2 200 100 50 50 5 100 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 5 coders, large cooldown, EDF[0m
+  [0;34m./codexion 5 2000 100 50 50 3 150 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 5 × 3 = 15 (got 15)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ EDF rescues starving coders, 4 coders[0m
+  [0;34m./codexion 4 700 200 100 100 3 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;31m[FAIL][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 3 = 12 (got 12)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ FIFO starvation risk, 4 coders, tight burnout[0m
+  [0;34m./codexion 4 500 200 100 100 3 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m burnout detected
+    [0;32m[PASS][0m burnout timestamp > 0
+    [0;32m[PASS][0m exactly 1 burned out line
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 1 compile required, 4 coders, FIFO[0m
+  [0;34m./codexion 4 800 100 50 50 1 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 1 = 4 (got 4)
+    [0;31m[FAIL][0m timestamps non-decreasing
+
+[1;33m▶ 1 compile required, 4 coders, EDF[0m
+  [0;34m./codexion 4 800 100 50 50 1 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 1 = 4 (got 4)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 7 coders, generous burnout, FIFO[0m
+  [0;34m./codexion 7 1500 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 7 × 2 = 14 (got 14)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 7 coders, generous burnout, EDF[0m
+  [0;34m./codexion 7 1500 100 50 50 2 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 7 × 2 = 14 (got 14)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 8 coders, generous burnout, FIFO[0m
+  [0;34m./codexion 8 1500 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 8 × 2 = 16 (got 16)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 2 coders, no debug/refactor, FIFO[0m
+  [0;34m./codexion 2 800 100 0 0 5 0 fifo[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 2 × 5 = 10 (got 10)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[1;33m▶ 4 coders, no debug/refactor, EDF[0m
+  [0;34m./codexion 4 800 100 0 0 5 0 edf[0m
+    [0;32m[PASS][0m program exits within 10s (no deadlock)
+    [0;32m[PASS][0m no burnout
+    [0;32m[PASS][0m compile count = 4 × 5 = 20 (got 20)
+    [0;32m[PASS][0m timestamps non-decreasing
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[0;36m  REPEATABILITY (same args, 5 runs must agree)[0m
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+
+[1;33m▶ 2 coders generous, no burnout, FIFO (x5)[0m
+  [0;34m./codexion 2 800 100 50 50 2 0 fifo[0m
+    [0;32m[PASS][0m all 5 runs agree (burnout=no)
+
+[1;33m▶ 4 coders generous, no burnout, EDF (x5)[0m
+  [0;34m./codexion 4 800 100 50 50 2 0 edf[0m
+    [0;32m[PASS][0m all 5 runs agree (burnout=no)
+
+[1;33m▶ 1 coder, always burns out, FIFO (x5)[0m
+  [0;34m./codexion 1 400 200 100 100 2 0 fifo[0m
+    [0;31m[FAIL][0m 5/5 runs disagreed (expected burnout=yes)
+
+[1;33m▶ 2 coders, burnout < compile, always burns out, FIFO (x5)[0m
+  [0;34m./codexion 2 50 200 100 100 2 0 fifo[0m
+    [0;32m[PASS][0m all 5 runs agree (burnout=yes)
+
+[1;33m▶ 4 coders, 5 compiles, no burnout, FIFO (x5)[0m
+  [0;34m./codexion 4 1500 100 50 50 5 0 fifo[0m
+    [0;32m[PASS][0m all 5 runs agree (burnout=no)
+
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+  Results: [0;32m200 passed[0m / [0;31m48 failed[0m / 248 total
+[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+  [0;31m48 TEST(S) FAILED ✗[0m
+

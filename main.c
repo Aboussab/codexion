@@ -7,7 +7,6 @@ int   start_simulation(int argc, char** argv)
     int             i;
 
     i = 0;
-
     arg = ft_parse(argc, argv);
     if (!arg)
         return (0);
@@ -20,7 +19,7 @@ int   start_simulation(int argc, char** argv)
             return (error_join("errore while creating coders."), 0);
         i++;
     }
-    if ((pthread_create(&(simulater->monitor), NULL, burn_out_detecteur, simulater)) != 0)
+    if ((pthread_create(&(simulater->monitor), NULL, detect_burn_out, simulater)) != 0)
             return (error_join("errore while creating simuleter thread."), 0);
     i = 0;
     while (i < arg->number_of_coders)

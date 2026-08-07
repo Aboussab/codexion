@@ -1,9 +1,10 @@
 NAME = codexion
-CFLAGS = -Wall -Werror -fsanitize=thread  -Wextra -pthread
+CFLAGS = -Wall -Werror -fsanitize=thread -Wextra  -g 
+#
 CC = cc
-SRC = dongles.c inisialization.c log_coder_routine.c \
-	main.c parsing_and_error.c push_bubble_pop.c \
-	clean_up.c \
+SRC = clean_up.c   dongles.c inisialization.c  main.c\
+	parsing_and_error.c coders.c display.c\
+	stop_simulation.c\
 
 OBJS = $(SRC:.c=.o)
 H_FILE = $(NAME).h
