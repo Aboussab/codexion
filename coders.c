@@ -39,7 +39,7 @@ void*    coder_routine(void* arg)
     {
         if (coder->id % 2 == 0)
         {
-            usleep(1000);
+            usleep(100);
             if(dongles_requeste(coder, coder->right_dongle, simulater) == 0)
                 return (NULL);
             if(dongles_requeste(coder, coder->left_dongle, simulater) == 0)
