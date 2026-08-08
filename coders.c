@@ -27,6 +27,25 @@ static int         coder_finished_compile(coders* coder, long long number_of_com
     pthread_mutex_unlock(&coder->counter_compiling_mutex);
     return (0);
 }
+static int take_dongles(coders* coder, simulation* simulater)
+{
+    if (coder->id % 2 == 0)
+    {
+        usleep(100);
+        if(dongles_requeste(coder, coder->right_dongle, simulater) == 0)
+            return (0);
+        if(dongles_requeste(coder, coder->left_dongle, simulater) == 0)
+            return (0);
+    }
+    else
+    {
+        if(dongles_requeste(coder, coder->left_dongle, simulater) == 0)
+            return (0);
+        if(dongles_requeste(coder, coder->right_dongle, simulater) == 0)
+            return (0);
+    }
+    return (1);
+}
 
 void*    coder_routine(void* arg)
 {
@@ -35,34 +54,20 @@ void*    coder_routine(void* arg)
 
     coder = (coders*)arg;
     simulater = coder->manager;
+    pthread_mutex_lock(&simulater->flag_mutex);
+    while (simulater->start_flag == 0)
+    {
+        pthread_cond_wait(&simulater->start_simulation, &simulater->flag_mutex);
+    }
+    pthread_mutex_unlock(&simulater->flag_mutex);
     while (coder_finished_compile(coder, simulater->parsed->number_of_compiles_required))
     {
-        if (coder->id % 2 == 0)
-        {
-            usleep(100);
-            if(dongles_requeste(coder, coder->right_dongle, simulater) == 0)
-                return (NULL);
-            if(dongles_requeste(coder, coder->left_dongle, simulater) == 0)
-                return (NULL);
-        }
-        else
-        {
-            // usleep();
-            if(dongles_requeste(coder, coder->left_dongle, simulater) == 0)
-                return (NULL);
-            if(dongles_requeste(coder, coder->right_dongle, simulater) == 0)
-                return (NULL);
-        }
-        if (check_stop_flag(simulater))
+        if (take_dongles(coder, simulater) == 0)
             return (NULL);
         coder_is_compiling(coder, simulater);
         put_dongel(coder->right_dongle, simulater);
         put_dongel(coder->left_dongle, simulater);
-        if (check_stop_flag(simulater))
-            return (NULL);
         coder_debbuging(simulater, coder);
-        if (check_stop_flag(simulater))
-            return (NULL);
         coder_refactoring(simulater, coder);
         if (check_stop_flag(simulater))
             return (NULL);

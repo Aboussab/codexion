@@ -49,6 +49,12 @@ void*    detect_burn_out(void* arg)
 
     simulater = (simulation*) arg;
     i = 0;
+    pthread_mutex_lock(&simulater->flag_mutex);
+    while (simulater->start_flag == 0)
+    {
+        pthread_cond_wait(&simulater->start_simulation, &simulater->flag_mutex);
+    }
+    pthread_mutex_unlock(&simulater->flag_mutex);
     while (1)
     {
         if(check_coder(simulater))

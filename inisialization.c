@@ -78,6 +78,8 @@ simulation*    inisialize_simulater(parse* arg)
     {
         pthread_mutex_init(&simulater->flag_mutex, NULL);
         simulater->stop_flag = 0;
+        simulater->start_flag = 0;
+        pthread_cond_init(&simulater->start_simulation, NULL);
         simulater->start_time = get_current_time();
         pthread_mutex_init(&simulater->log_mutex, NULL);
         simulater->monitor = 0;
