@@ -6,7 +6,7 @@
 /*   By: aboussab <aboussab@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 18:11:08 by aboussab          #+#    #+#             */
-/*   Updated: 2026/08/10 03:58:38 by aboussab         ###   ########.fr       */
+/*   Updated: 2026/08/11 16:21:10 by aboussab         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,11 @@ void	*coders_finish(t_simulation *simulater, int i, int cas)
 		pthread_mutex_unlock(&simulater->flag_mutex);
 		j = 0;
 		while (j < simulater->parsed->number_of_coders)
+		{
+			pthread_mutex_lock(&simulater->all_dongles[j++].dongle_mutex);
 			pthread_cond_broadcast(&simulater->all_dongles[j++].dongle_cond);
+			pthread_mutex_unlock(&simulater->all_dongles[j++].dongle_mutex);
+		}
 		return (NULL);
 	}
 	else
@@ -84,7 +88,11 @@ void	*coders_finish(t_simulation *simulater, int i, int cas)
 		pthread_mutex_unlock(&simulater->flag_mutex);
 		log_fct(simulater, simulater->all_coders[i].id, 5);
 		while (j < simulater->parsed->number_of_coders)
+		{
+			pthread_mutex_lock(&simulater->all_dongles[j++].dongle_mutex);
 			pthread_cond_broadcast(&simulater->all_dongles[j++].dongle_cond);
+			pthread_mutex_unlock(&simulater->all_dongles[j++].dongle_mutex);
+		}
 		return (NULL);
 	}
 }
