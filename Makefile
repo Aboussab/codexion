@@ -1,5 +1,5 @@
 NAME = codexion
-CFLAGS = -Wall -Werror -fsanitize=thread -Wextra  -g 
+CFLAGS = -Wall -Werror -Wextra
 #
 CC = cc
 SRC = clean_up.c   dongles.c inisialization.c  main.c\
