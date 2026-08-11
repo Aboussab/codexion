@@ -3,7 +3,7 @@ CFLAGS = -Wall -Werror -fsanitize=thread -Wextra  -g
 #
 CC = cc
 SRC = clean_up.c   dongles.c inisialization.c  main.c\
-	parsing_and_error.c coders.c display.c\
+	parsing_and_error.c coders.c display.c coders_thread.c\
 	stop_simulation.c\
 
 OBJS = $(SRC:.c=.o)
