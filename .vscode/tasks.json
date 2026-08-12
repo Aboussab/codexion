@@ -1,0 +1,170 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "rebuild-and-helgrind",
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"re"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "helgrind-check",
+			"type": "shell",
+			"command": "valgrind",
+			"args": [
+				"--tool=helgrind",
+				"./codexion",
+				"200",
+				"800",
+				"200",
+				"200",
+				"200",
+				"10",
+				"0",
+				"fifo"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "rebuild-after-dongle-fix",
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"re"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "helgrind-after-dongle-fix",
+			"type": "shell",
+			"command": "valgrind",
+			"args": [
+				"--tool=helgrind",
+				"./codexion",
+				"200",
+				"800",
+				"200",
+				"200",
+				"200",
+				"10",
+				"0",
+				"fifo"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "rebuild-after-clock-fix",
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"re"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "helgrind-after-clock-fix",
+			"type": "shell",
+			"command": "valgrind",
+			"args": [
+				"--tool=helgrind",
+				"./codexion",
+				"200",
+				"800",
+				"200",
+				"200",
+				"200",
+				"10",
+				"0",
+				"fifo"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "rebuild-after-stop-check-fix",
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"re"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "helgrind-after-stop-check-fix",
+			"type": "shell",
+			"command": "valgrind",
+			"args": [
+				"--tool=helgrind",
+				"./codexion",
+				"200",
+				"800",
+				"200",
+				"200",
+				"200",
+				"10",
+				"0",
+				"fifo"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "rebuild-after-polling-fix",
+			"type": "shell",
+			"command": "make",
+			"args": [
+				"re"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		},
+		{
+			"label": "helgrind-after-polling-fix",
+			"type": "shell",
+			"command": "valgrind",
+			"args": [
+				"--tool=helgrind",
+				"./codexion",
+				"200",
+				"800",
+				"200",
+				"200",
+				"200",
+				"10",
+				"0",
+				"fifo"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

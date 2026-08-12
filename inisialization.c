@@ -14,10 +14,10 @@
 
 long	get_current_time(void)
 {
-	struct timeval		tv;
+	struct timespec		tv;
 
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000L + tv.tv_usec / 1000);
+	clock_gettime(CLOCK_REALTIME, &tv);
+	return (tv.tv_sec * 1000L + tv.tv_nsec / 1000000L);
 }
 
 static t_simulation	*allocation_de_object(t_parse *arg)

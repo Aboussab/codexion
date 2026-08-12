@@ -26,8 +26,8 @@ NULL, coder_routine, &(simulater->all_coders[i]))) != 0)
 	}
 	pthread_mutex_lock(&simulater->flag_mutex);
 	simulater->start_flag = 1;
-	pthread_mutex_unlock(&simulater->flag_mutex);
 	pthread_cond_broadcast(&simulater->start_simulation);
+	pthread_mutex_unlock(&simulater->flag_mutex);
 	i = 0;
 	while (i < simulater->parsed->number_of_coders)
 	{

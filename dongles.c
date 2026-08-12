@@ -65,8 +65,6 @@ static t_coders	*pop_queue(t_dongles *dongle)
 
 int	dongles_requeste(t_coders *coder, t_dongles *dongle, t_simulation *sim)
 {
-	struct timespec	tsp;
-
 	pthread_mutex_lock(&dongle->dongle_mutex);
 	push_queue(dongle, coder, sim);
 	while (dongle->waiting_queue[0].waiting_coder != coder || \
@@ -74,22 +72,17 @@ dongle->release_time > get_current_time() || dongle->available == 0)
 	{
 		if (check_stop_flag(sim))
 			return (pthread_mutex_unlock(&dongle->dongle_mutex), 0);
-		tsp.tv_sec = dongle->release_time / 1000;
-		tsp.tv_nsec = (dongle->release_time % 1000) * 1000000L;
-		pthread_cond_timedwait(&dongle->dongle_cond, \
-&dongle->dongle_mutex, &tsp);
-	}
-	pthread_mutex_unlock(&dongle->dongle_mutex);
-	if (check_stop_flag(sim))
-		return (0);
-	else
-	{
+		pthread_mutex_unlock(&dongle->dongle_mutex);
+		usleep(1000);
 		pthread_mutex_lock(&dongle->dongle_mutex);
-		dongle->available = 0;
-		log_fct(sim, coder->id, 1);
-		pop_queue(dongle);
-		return (pthread_mutex_unlock(&dongle->dongle_mutex), 1);
 	}
+	if (check_stop_flag(sim))
+		return (pthread_mutex_unlock(&dongle->dongle_mutex), 0);
+	dongle->available = 0;
+	pop_queue(dongle);
+	log_fct(sim, coder->id, 1);
+	pthread_mutex_unlock(&dongle->dongle_mutex);
+	return (1);
 }
 
 void	put_dongel(t_dongles *dongle, t_simulation *sim)
@@ -109,14 +102,14 @@ int	take_dongles(t_coders *coder, t_simulation *simulater)
 		if (dongles_requeste(coder, coder->right_dongle, simulater) == 0)
 			return (0);
 		if (dongles_requeste(coder, coder->left_dongle, simulater) == 0)
-			return (0);
+			return (put_dongel(coder->right_dongle, simulater), 0);
 	}
 	else
 	{
 		if (dongles_requeste(coder, coder->left_dongle, simulater) == 0)
 			return (0);
 		if (dongles_requeste(coder, coder->right_dongle, simulater) == 0)
-			return (0);
+			return (put_dongel(coder->left_dongle, simulater), 0);
 	}
 	return (1);
 }

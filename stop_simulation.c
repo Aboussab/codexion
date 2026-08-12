@@ -74,9 +74,10 @@ void	*coders_finish(t_simulation *simulater, int i, int cas)
 		j = 0;
 		while (j < simulater->parsed->number_of_coders)
 		{
-			pthread_mutex_lock(&simulater->all_dongles[j++].dongle_mutex);
-			pthread_cond_broadcast(&simulater->all_dongles[j++].dongle_cond);
-			pthread_mutex_unlock(&simulater->all_dongles[j++].dongle_mutex);
+			pthread_mutex_lock(&simulater->all_dongles[j].dongle_mutex);
+			pthread_cond_broadcast(&simulater->all_dongles[j].dongle_cond);
+			pthread_mutex_unlock(&simulater->all_dongles[j].dongle_mutex);
+			j++;
 		}
 		return (NULL);
 	}
@@ -89,9 +90,10 @@ void	*coders_finish(t_simulation *simulater, int i, int cas)
 		log_fct(simulater, simulater->all_coders[i].id, 5);
 		while (j < simulater->parsed->number_of_coders)
 		{
-			pthread_mutex_lock(&simulater->all_dongles[j++].dongle_mutex);
-			pthread_cond_broadcast(&simulater->all_dongles[j++].dongle_cond);
-			pthread_mutex_unlock(&simulater->all_dongles[j++].dongle_mutex);
+			pthread_mutex_lock(&simulater->all_dongles[j].dongle_mutex);
+			pthread_cond_broadcast(&simulater->all_dongles[j].dongle_cond);
+			pthread_mutex_unlock(&simulater->all_dongles[j].dongle_mutex);
+			j++;
 		}
 		return (NULL);
 	}
